@@ -1,0 +1,22 @@
+name: Feature request
+description: Propose new behaviour
+title: "[feature] "
+labels: ["enhancement", "needs-triage"]
+body: 
+  - type: textarea
+    id: problem
+    attributes: 
+      label: What problem does this solve? 
+    validations: 
+      required: true
+
+  - type: dropdown
+    id: area
+    attriburtes: 
+      label: Area
+      options: 
+      - queue
+      - manifest
+      - docs
+    validations: 
+      required: true
