@@ -1,0 +1,81 @@
+name: Triage
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  issues: write
+  contents: read
+
+env:
+  PROJECT_ID:   PVT_kwHOAoJJBs4BtOxI
+  STATUS_FIELD: PVTSSF_lAHOAoJJBs4BtOxIzhrZNeQ
+  OPT_TRIAGE: f75ad846
+  OPT_ACCEPTED: 47fc9ee4
+  OPT_BLOCKED: "98236657"
+
+jobs:
+  route:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add the issue to the board
+        id: add
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+        run: |
+          item=$(gh api graphql -f query='
+            mutation($project: ID!, $content: ID!) {
+              addProjectV2ItemById(input: {projectId: $project, contentId: $content}) {
+                item { id }
+              }
+            }'  -f project="$PROJECT_ID" \
+                -f content="${{ github.event.issue.node_id }}" \
+                --jq '.data.addProjectV2ItemById.item.id')
+            echo "item=$item" >> "$GITHUB_OUTPUT"
+            echo "Board item: $item"
+      - name: Choose the column
+        id: pick
+        run: |
+          labels= '${{ toJSON(github.event.issue.labels.*.name) }}'
+          if echo "$labels" | grep -q '"blocked"'; then
+            echo "opt=$OPT_BLOCKED" >> "$GITHUB_OUTPUT"
+            echo "col=Blocked" >> "$GITHUB_OUTPUT"
+          elif echo "$labels" | grep -q '"accepted"'; then
+            echo "opt=$OPT_ACCEPTED" >> "$GITHUB_OUTPUT"
+            echo "col=Accepted" >> "$GITHUB_OUTPUT"
+          else
+            echo "opt=$OPT_TRIAGE" >> "$GITHUB_OUTPUT"
+            echo "col=Triage" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Move the card
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+        run: |
+          gh api graphql -f query='
+            mutation($project: ID!, $item: ID!, $field: ID!, $opt: String!) {
+              updateProjectV2ItemFieldValue(input: {
+                projectId: $project,
+                itemId: $item, 
+                fieldId: $field, 
+                value: { singleSelectOptionId: $opt }
+              }) { projectV2Item { id } }
+            }'  -f project="$PROJECT_ID" \
+                -f item="${{ steps.add.outputs.item }}" \
+                -f field="$STATUS_FIELD" \
+                -f opt="${{ steps.pick.outputs.opt }}"
+
+      - name: Comment on the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --repo "${{ github.repository }}" \
+            --body "Field through the structured form and placed in **${{ steps.pick.outputs.col }}** 
+            on the board. Severity and area were captured as fields, so manual triage was needed"
+              
+                
+                
+        
+  
