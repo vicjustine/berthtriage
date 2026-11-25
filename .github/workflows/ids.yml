@@ -29,7 +29,7 @@ jobs:
           echo "PROJECT_ID:   $(jq -r '.data.user.projectV2.id' ids.json)"
           echo "STATUS_FIELD: $(jq -r '.data.user.projectV2.field.id' ids.json)"
           echo ""
-          jq -r '.data.usser.projectV2.field.options[]
+          jq -r '.data.user.projectV2.field.options[]
                   | "OPT_" + (.name | ascii_upcase) + ": " + .id' ids.json
                   
                     
