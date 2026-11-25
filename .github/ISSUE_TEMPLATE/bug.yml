@@ -1,0 +1,43 @@
+name: Bug report
+description: Something behaves incorrectly
+title: "[bug] "
+labels: ["bug", "needs-triage"]
+body: 
+  - type: markdown
+    attributes: 
+      value: "Fill this in completely - incomplete reports are closed."
+      
+  - type: input
+    id: version
+    attributes: 
+      label: Version
+      placeholder: "1.0.0"
+    validations: 
+      required: true
+      
+  - type: dropdown
+    id: severity
+    attributes: 
+      label: Severity
+      options: 
+        - blocker
+        - major
+        - minor
+    validations: 
+      required: true
+      
+  - type: textarea
+    id: repro
+    attributes: 
+      label: Steps to reproduce
+      render: shell
+    validations: 
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes: 
+      label: Before filing
+      options: 
+       - label: I searched existing issues
+         requried: true
