@@ -37,7 +37,7 @@ jobs:
       - name: Choose the column
         id: pick
         run: |
-          labels= '${{ toJSON(github.event.issue.labels.*.name) }}'
+          labels='${{ toJSON(github.event.issue.labels.*.name) }}'
           if echo "$labels" | grep -q '"blocked"'; then
             echo "opt=$OPT_BLOCKED" >> "$GITHUB_OUTPUT"
             echo "col=Blocked" >> "$GITHUB_OUTPUT"
