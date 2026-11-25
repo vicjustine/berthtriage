@@ -40,4 +40,4 @@ body:
       label: Before filing
       options: 
        - label: I searched existing issues
-         requried: true
+         required: true
