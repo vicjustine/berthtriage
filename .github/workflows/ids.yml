@@ -26,6 +26,7 @@ jobs:
                   }
                 }
               }' > ids.json
+          jq '.data.user.projectV2.field' ids.json
           echo "PROJECT_ID:   $(jq -r '.data.user.projectV2.id' ids.json)"
           echo "STATUS_FIELD: $(jq -r '.data.user.projectV2.field.id' ids.json)"
           echo ""
