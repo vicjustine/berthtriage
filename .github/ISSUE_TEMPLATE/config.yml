@@ -1,0 +1,5 @@
+blank_issue_enabled: false
+contact_links: 
+  - name: Security report
+    url: https://github.com/vicjustine/berthtriage/security/advisories/new
+    about: Report vulnerabilities privately, never as a public issue
