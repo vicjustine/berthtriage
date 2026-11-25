@@ -25,4 +25,4 @@ board.
 
 
 
-## There is no REST endpoint for any of this. Project vs is GrapQL-only so moving a card means resolving a project node ID, a field ID and an option ID, then issuing a type mutations. I will run the query from a workflow, because github retired the browser explorer last novemeber.  
+There is no REST endpoint for any of this. Project vs is GrapQL-only so moving a card means resolving a project node ID, a field ID and an option ID, then issuing a type mutations. I will run the query from a workflow, because github retired the browser explorer last novemeber.  
